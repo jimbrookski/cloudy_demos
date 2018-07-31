@@ -1,0 +1,69 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "environmentName": {
+            "value": "test"
+        },
+        "resourceName": {
+            "value": "cloudy-aks"
+        },
+        "location": {
+            "value": "westus2"
+        },
+        "dnsPrefix": {
+            "value": "cloudy-aks"
+        },
+        "agentCount": {
+            "value": 3
+        },
+        "agentVMSize": {
+            "value": "Standard_D8s_v3"
+        },
+        "servicePrincipalClientId": {
+            "value": ""
+        },
+        "servicePrincipalClientSecret": {
+            "value": ""
+        },
+        "kubernetesVersion": {
+            "value": "1.9.6"
+        },
+        "omsWorkspaceId": {
+            "value": ""
+        },
+        "workspaceRegion": {
+            "value": ""
+        },
+        "enableHttpApplicationRouting": {
+            "value": false
+        },
+        "networkPlugin": {
+            "value": "azure"
+        },
+        "serviceCidr": {
+            "value": "10.11.0.0/16"
+        },
+        "dnsServiceIP": {
+            "value": "10.11.0.10"
+        },
+        "dockerBridgeCidr": {
+            "value": "172.17.0.1/16"
+        },
+        "agentPoolName": {
+            "value": "pool"
+        },
+        "sshPublicKey": {
+            "value": ""
+        },
+        "logStorageAccountName": {
+            "value": "logs"
+        },
+        "logWorkspaceName": {
+            "value": "logs"
+        },
+        "omsLocation": {
+            "value": "eastus"
+        }
+    }
+}

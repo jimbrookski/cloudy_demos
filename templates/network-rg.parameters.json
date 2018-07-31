@@ -1,0 +1,19 @@
+{
+  "$schema":
+    "http://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "environmentName": {
+      "value": "test"
+    },
+    "aksVnetName": {
+      "value": "aks-vnet"
+    },
+    "aksVnetAddressPrefix": {
+      "value": "10.202.0.0/16"
+    },
+    "aksSubnetPrefix": {
+      "value": "10.202.0.0/21"
+    }
+  }
+}

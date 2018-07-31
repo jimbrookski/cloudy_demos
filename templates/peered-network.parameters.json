@@ -1,0 +1,31 @@
+{
+  "$schema":
+    "http://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "environmentName": {
+      "value": "test"
+    },
+    "aksVnetName": {
+      "value": "aks-vnet"
+    },
+    "aksVnetAddressPrefix": {
+      "value": "10.200.0.0/16"
+    },
+    "aksSubnetPrefix": {
+      "value": "10.200.0.0/21"
+    },
+    "secondaryVnetName": {
+      "value": "secondary-vnet"
+    },
+    "secondaryVnetAddressPrefix": {
+      "value": "10.0.0.0/16"
+    },
+    "secondarySubnetPrefix": {
+      "value": "10.0.0.0/21"
+    },
+    "secondaryLocation": {
+      "value": "australiaeast"
+    }
+  }
+}

@@ -1,0 +1,65 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "environmentName": {
+      "type": "string",
+      "metadata": {
+        "description": "Environment type, test/prod/dev"
+      },
+      "defaultValue": [
+        "prod",
+        "test",
+        "dev"
+      ]
+    },
+    "aksVnetName": {
+      "type": "string",
+      "metadata": {
+        "description": "AKS dedicated VNET name"
+      }
+    },
+    "aksVnetAddressPrefix": {
+      "type": "string",
+      "metadata": {
+        "description": "AKS dedicated VNET address space"
+      }
+    },
+    "aksSubnetPrefix": {
+      "type": "string",
+      "metadata": {
+        "description": "Subnet for dedicated AKS VNET"
+      }
+    }
+  },
+  "variables": {
+    "aksVnetName": "[concat(parameters('environmentName'), '-', parameters('aksVnetName'))]",
+    "aksSubnetName": "aks"
+  },
+  "resources": [
+    {
+      "apiVersion": "2016-03-30",
+      "type": "Microsoft.Network/virtualNetworks",
+      "name": "[variables('aksVnetName')]",
+      "location": "[resourceGroup().location]",
+      "properties": {
+        "addressSpace": {
+          "addressPrefixes": [
+            "[parameters('aksVnetAddressPrefix')]"
+          ]
+        },
+        "subnets": [
+          {
+            "name": "[variables('aksSubnetName')]",
+            "properties": {
+              "addressPrefix": "[parameters('aksSubnetPrefix')]"
+            }
+          }
+        ]
+      },
+      "resources": [
+      ],
+      "dependsOn": []
+    }
+  ]
+}

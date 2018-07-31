@@ -1,0 +1,159 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "environmentName": {
+      "type": "string",
+      "metadata": {
+        "description": "Environment type, test/prod/dev"
+      },
+      "defaultValue": [
+        "prod",
+        "test",
+        "dev"
+      ]
+    },
+    "aksVnetName": {
+      "type": "string",
+      "metadata": {
+        "description": "AKS dedicated VNET name"
+      }
+    },
+    "aksVnetAddressPrefix": {
+      "type": "string",
+      "metadata": {
+        "description": "AKS dedicated VNET address space"
+      }
+    },
+    "aksSubnetPrefix": {
+      "type": "string",
+      "metadata": {
+        "description": "Subnet for dedicated AKS VNET"
+      }
+    },
+    "secondaryVnetName": {
+      "type": "string",
+      "metadata": {
+        "description": "AKS dedicated VNET name"
+      }
+    },
+    "secondaryVnetAddressPrefix": {
+      "type": "string",
+      "metadata": {
+        "description": "AKS dedicated VNET address space"
+      }
+    },
+    "secondarySubnetPrefix": {
+      "type": "string",
+      "metadata": {
+        "description": "Subnet for dedicated AKS VNET"
+      }
+    },
+    "secondaryLocation": {
+      "type": "string",
+      "metadata": {
+        "description": "Location for the secondary network"
+      }
+    }
+  },
+  "variables": {
+    "aksVnetName": "[concat(parameters('environmentName'), '-', parameters('aksVnetName'))]",
+    "secondaryVnetName": "[concat(parameters('environmentName'), '-', parameters('secondaryVnetName'))]",
+    "aksSubnetName": "aks",
+    "secondarySubnetName": "data",
+    "vNettovNetSecondaryPeeringName": "primary-to-secondary-peer",
+    "vNetSecondarytovNetPeeringName": "secondary-to-primary-peer",
+    "secondaryVnetId": "[resourceId('Microsoft.Network/virtualNetworks', variables('secondaryVnetName'))]",
+    "aksVnetId": "[resourceId('Microsoft.Network/virtualNetworks', variables('aksVnetName'))]"
+  },
+  "resources": [
+    {
+      "apiVersion": "2016-03-30",
+      "type": "Microsoft.Network/virtualNetworks",
+      "name": "[variables('aksVnetName')]",
+      "location": "[resourceGroup().location]",
+      "properties": {
+        "addressSpace": {
+          "addressPrefixes": [
+            "[parameters('aksVnetAddressPrefix')]"
+          ]
+        },
+        "subnets": [
+          {
+            "name": "[variables('aksSubnetName')]",
+            "properties": {
+              "addressPrefix": "[parameters('aksSubnetPrefix')]"
+            }
+          }
+        ]
+      },
+      "resources": [
+        {
+          "apiVersion": "2016-06-01",
+          "type": "virtualNetworkPeerings",
+          "name": "[variables('vNettovNetSecondaryPeeringName')]",
+          "location": "[resourceGroup().location]",
+          "dependsOn": [
+            "[concat('Microsoft.Network/virtualNetworks/', variables('aksVnetName'))]",
+            "[concat('Microsoft.Network/virtualNetworks/', variables('secondaryVnetName'))]"
+          ],
+          "comments": "This is the peering from vNet to vNet Secondary",
+          "properties": {
+            "allowVirtualNetworkAccess": "true",
+            "allowForwardedTraffic": "false",
+            "allowGatewayTransit": "false",
+            "useRemoteGateways": "false",
+            "remoteVirtualNetwork": {
+              "id": "[variables('secondaryVnetId')]"
+            }
+          }
+        }
+      ],
+      "dependsOn": []
+    },
+    {
+      "apiVersion": "2016-03-30",
+      "type": "Microsoft.Network/virtualNetworks",
+      "name": "[variables('secondaryVnetName')]",
+      "location": "[parameters('secondaryLocation')]",
+      "properties": {
+        "addressSpace": {
+          "addressPrefixes": [
+            "[parameters('secondaryVnetAddressPrefix')]"
+          ]
+        },
+        "subnets": [
+          {
+            "name": "[variables('secondarySubnetName')]",
+            "properties": {
+              "addressPrefix": "[parameters('secondarySubnetPrefix')]"
+            }
+          }
+        ]
+      },
+      "resources": [
+        {
+          "apiVersion": "2016-06-01",
+          "type": "virtualNetworkPeerings",
+          "name": "[variables('vNetSecondarytovNetPeeringName')]",
+          "location": "[resourceGroup().location]",
+          "dependsOn": [
+            "[concat('Microsoft.Network/virtualNetworks/', variables('aksVnetName'))]",
+            "[concat('Microsoft.Network/virtualNetworks/', variables('secondaryVnetName'))]"
+          ],
+          "comments": "This is the peering from vNet Secondary to vNe",
+          "properties": {
+            "allowVirtualNetworkAccess": "true",
+            "allowForwardedTraffic": "false",
+            "allowGatewayTransit": "false",
+            "useRemoteGateways": "false",
+            "remoteVirtualNetwork": {
+              "id": "[variables('aksVnetId')]"
+            }
+          }
+        }
+      ],
+      "dependsOn": []
+    }
+  ]
+}
