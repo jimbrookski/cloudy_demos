@@ -16,7 +16,7 @@ msrest==0.5.4
 msrestazure==0.4.34
 oauthlib==2.1.0
 pycparser==2.18
-PyJWT==1.6.4
+PyJWT==2.4.0
 pylint==2.0.1
 python-dateutil==2.7.3
 requests==2.19.1
